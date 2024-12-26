@@ -5,45 +5,120 @@ const About = () => {
     <>
       <section
         id="about"
-        className="bg-white dark:bg-slate-800 dark:text-white"
+        className="bg-white dark:bg-slate-800 dark:text-white py-12"
       >
         <div className="container md:w-[70%]">
-          <div className="grid items-center gap-4 grid-cols-1 sm:grid-cols-2">
-            <div className="relative font-bold">
-              <div className="text-center text-6xl xl:text-8xl font-bold text-black/5 dark:text-gray-700">
-                ABOUT
+          <div className="text-center mb-12">
+            <h1 className="text-4xl font-bold text-primary dark:text-white">
+              Menu Buket Bunga
+            </h1>
+            <p className="text-lg text-slate-500 mt-4">
+              Temukan buket bunga terbaik untuk berbagai momen spesial Anda.
+            </p>
+          </div>
+
+          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {/* Card 1 */}
+            <div className="bg-white dark:bg-gray-900 dark:text-white p-6 rounded-lg shadow-lg">
+              <div className="relative">
+                <img
+                  src="https://via.placeholder.com/300x200?text=Buket+Pernikahan"
+                  alt="Buket Pernikahan"
+                  className="w-full h-48 object-cover rounded-lg"
+                />
+                <div className="absolute top-0 right-0 bg-primary text-white py-2 px-4 rounded-bl-lg text-xs">
+                  Promo
+                </div>
               </div>
-              <h1 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-3xl md:text-4xl">
-                About Me
-              </h1>
+              <h3 className="text-xl font-semibold mt-4 text-center">Buket Pernikahan</h3>
+              <p className="text-lg font-bold text-primary text-center mt-3">Rp 250.000</p>
+              <div className="flex justify-center mt-4">
+                <a href="/shop" className="inline-block primary-btn !px-6">
+                  Beli
+                </a>
+              </div>
             </div>
-            <div className="text-slate-500">
-              <br />
-              <br />
-              <p>
-                Saya Bisma Saya Lahir Di Demak 15 Oktober 2008, Saya Sekarang
-                Masih Pelajar Di Sekolah SMK BINA NUSANTARA Hoby Saya Dengerin
-                Lagunya Neck Deep
-              </p>
-              <br />
-              <p>Cita-Cita Saya Adalah Menjadi Full stack Developer</p>
-              <div>
-                <a href="tel:+6289518626219" className="outline-btn inline-block">
-                  Contact
+
+            {/* Card 2 */}
+            <div className="bg-white dark:bg-gray-900 dark:text-white p-6 rounded-lg shadow-lg">
+              <div className="relative">
+                <img
+                  src="https://via.placeholder.com/300x200?text=Buket+Ulang+Tahun"
+                  alt="Buket Ulang Tahun"
+                  className="w-full h-48 object-cover rounded-lg"
+                />
+                <div className="absolute top-0 right-0 bg-primary text-white py-2 px-4 rounded-bl-lg text-xs">
+                  Promo
+                </div>
+              </div>
+              <h3 className="text-xl font-semibold mt-4 text-center">Buket Ulang Tahun</h3>
+              <p className="text-lg font-bold text-primary text-center mt-3">Rp 150.000</p>
+              <div className="flex justify-center mt-4">
+                <a href="/shop" className="inline-block primary-btn !px-6">
+                  Beli
+                </a>
+              </div>
+            </div>
+
+            {/* Card 3 */}
+            <div className="bg-white dark:bg-gray-900 dark:text-white p-6 rounded-lg shadow-lg">
+              <div className="relative">
+                <img
+                  src="https://via.placeholder.com/300x200?text=Buket+Kasih+Sayang"
+                  alt="Buket Kasih Sayang"
+                  className="w-full h-48 object-cover rounded-lg"
+                />
+                <div className="absolute top-0 right-0 bg-primary text-white py-2 px-4 rounded-bl-lg text-xs">
+                  Promo
+                </div>
+              </div>
+              <h3 className="text-xl font-semibold mt-4 text-center">Buket Kasih Sayang</h3>
+              <p className="text-lg font-bold text-primary text-center mt-3">Rp 180.000</p>
+              <div className="flex justify-center mt-4">
+                <a href="/shop" className="inline-block primary-btn !px-6">
+                  Beli
+                </a>
+              </div>
+            </div>
+
+            {/* Card 4 */}
+            <div className="bg-white dark:bg-gray-900 dark:text-white p-6 rounded-lg shadow-lg">
+              <div className="relative">
+                <img
+                  src="https://via.placeholder.com/300x200?text=Buket+Romantis"
+                  alt="Buket Romantis"
+                  className="w-full h-48 object-cover rounded-lg"
+                />
+                <div className="absolute top-0 right-0 bg-primary text-white py-2 px-4 rounded-bl-lg text-xs">
+                  Promo
+                </div>
+              </div>
+              <h3 className="text-xl font-semibold mt-4 text-center">Buket Romantis</h3>
+              <p className="text-lg font-bold text-primary text-center mt-3">Rp 220.000</p>
+              <div className="flex justify-center mt-4">
+                <a href="/shop" className="inline-block primary-btn !px-6">
+                  Beli
                 </a>
               </div>
             </div>
           </div>
+
+          {/* Kata-kata Indah setelah seluruh card */}
+          <div className="text-center mt-12">
+            <p className="text-xl text-slate-500">
+              "Setiap buket bunga mengandung cerita cinta, kebahagiaan, dan kenangan indah yang akan selalu mekar dalam hidup kita."
+            </p>
+          </div>
         </div>
       </section>
-  
+
       <footer className="bg-gray-800 text-white py-4">
         <div className="container text-center">
-          <p>&copy; 2024 Bisma Putra. All rights reserved.</p>
+          <p>&copy; 2024 Toko Buket Bunga Saquenna. All rights reserved.</p>
           <p>
-            Follow me on{" "}
+            Follow us on{" "}
             <a
-              href="https://www.instagram.com/bismaaaptra"
+              href="https://www.instagram.com/tokobuketbunga"
               target="_blank"
               rel="noopener noreferrer"
               className="underline hover:text-gray-400"
@@ -51,6 +126,7 @@ const About = () => {
               Instagram
             </a>
           </p>
+          <p>Alamat: Kali tengah, Mranggen, Demak</p>
         </div>
       </footer>
     </>
