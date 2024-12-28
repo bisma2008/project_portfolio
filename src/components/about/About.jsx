@@ -22,7 +22,7 @@ const About = () => {
             <div className="bg-white dark:bg-gray-900 dark:text-white p-6 rounded-lg shadow-lg">
               <div className="relative">
                 <img
-                  src="https://via.placeholder.com/300x200?text=Buket+Pernikahan"
+                  src="https://tse1.mm.bing.net/th?id=OIP.ccTnWHm-U_7quDQ4cSOwlwHaHa&pid=Api&P=0&h=180"
                   alt="Buket Pernikahan"
                   className="w-full h-48 object-cover rounded-lg"
                 />
@@ -43,7 +43,7 @@ const About = () => {
             <div className="bg-white dark:bg-gray-900 dark:text-white p-6 rounded-lg shadow-lg">
               <div className="relative">
                 <img
-                  src="https://via.placeholder.com/300x200?text=Buket+Ulang+Tahun"
+                  src="https://tse2.mm.bing.net/th?id=OIP.Tyy8ZkdrUsBf7viF55dcHgHaHa&pid=Api&P=0&h=180"
                   alt="Buket Ulang Tahun"
                   className="w-full h-48 object-cover rounded-lg"
                 />
@@ -64,7 +64,7 @@ const About = () => {
             <div className="bg-white dark:bg-gray-900 dark:text-white p-6 rounded-lg shadow-lg">
               <div className="relative">
                 <img
-                  src="https://via.placeholder.com/300x200?text=Buket+Kasih+Sayang"
+                  src="https://tse2.mm.bing.net/th?id=OIP.s-EXZEhqN2wIDHdXu858WAHaHa&pid=Api&P=0&h=180"
                   alt="Buket Kasih Sayang"
                   className="w-full h-48 object-cover rounded-lg"
                 />
@@ -85,7 +85,7 @@ const About = () => {
             <div className="bg-white dark:bg-gray-900 dark:text-white p-6 rounded-lg shadow-lg">
               <div className="relative">
                 <img
-                  src="https://via.placeholder.com/300x200?text=Buket+Romantis"
+                  src="https://tse3.mm.bing.net/th?id=OIP.WYbROPX1kbAUWrvJcU_LdAHaHa&pid=Api&P=0&h=180"
                   alt="Buket Romantis"
                   className="w-full h-48 object-cover rounded-lg"
                 />

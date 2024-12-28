@@ -1,14 +1,17 @@
 import React, { useEffect } from 'react';
 import { BiSolidMoon, BiSolidSun } from 'react-icons/bi';
 import { FiMenu } from "react-icons/fi";
+import { useNavigate } from 'react-router-dom'; // Impor useNavigate untuk logout
+import Swal from "sweetalert2"; // Impor SweetAlert
 
 const navMenus = [
-  { name: "Home", link: "/" }, // Tambahkan menu Home
-  { name: "Menu", link: "/About" }, // Menu Login tetap ada
-  { name: "Login Admin", link: "/Login" }, // Menu Login tetap ada
+  { name: "Home", link: "/" },
+  { name: "Menu", link: "/About" },
+  { name: "Login Admin", link: "/Login" },
 ];
 
 const Navbar = () => {
+  const navigate = useNavigate(); // Inisialisasi useNavigate
   const [showMenu, setShowMenu] = React.useState(false);
   const [darkMode, setDarkMode] = React.useState(
     localStorage.getItem("theme") === "dark" ? true : false
@@ -17,6 +20,24 @@ const Navbar = () => {
   const toggleMenu = () => setShowMenu(!showMenu);
 
   const toggleDarkMode = () => setDarkMode(!darkMode);
+
+  const handleLogout = () => {
+    // Konfirmasi logout dengan SweetAlert
+    Swal.fire({
+      title: "Apakah Anda yakin?",
+      text: "Anda akan logout dari akun ini.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Logout",
+      cancelButtonText: "Batal",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Hapus data session atau token jika ada (misalnya di localStorage)
+        localStorage.removeItem('userToken'); // Contoh, hapus token atau data user
+        navigate('/Login'); // Arahkan ke halaman Login
+      }
+    });
+  };
 
   useEffect(() => {
     if (darkMode) {
@@ -51,6 +72,14 @@ const Navbar = () => {
                 </a>
               </li>
             ))}
+            <li>
+              <button 
+                onClick={handleLogout} 
+                className="text-xl font-semibold px-2 py-4 md:py-6 inline-block cursor-pointer dark:text-white"
+              >
+                Logout
+              </button>
+            </li>
           </ul>
         </div>
 
@@ -79,6 +108,14 @@ const Navbar = () => {
                   </a>
                 </li>
               ))}
+              <li>
+                <button 
+                  onClick={handleLogout} 
+                  className="text-xl font-semibold px-2 py-4 md:py-6 inline-block cursor-pointer dark:text-white"
+                >
+                  Logout
+                </button>
+              </li>
             </ul>
           </div>
         )}
