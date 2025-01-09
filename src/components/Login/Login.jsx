@@ -4,6 +4,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserTie } from '@fortawesome/free-solid-svg-icons';  // Import the user-tie icon
+import { API_LOGIN } from "../../utils/BaseUrl";
 
 const Login = ({ setIsAuthenticated }) => {
   const [email, setEmail] = useState("");
@@ -22,7 +23,7 @@ const Login = ({ setIsAuthenticated }) => {
 
     try {
       // Adjusted to match backend request structure
-      const response = await axios.post("http://localhost:9090/api/login", {
+      const response = await axios.post(`${API_LOGIN}/login`,  {
         email,
         password,
       });

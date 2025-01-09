@@ -4,6 +4,7 @@ import axios from 'axios';
 import Swal from 'sweetalert2';  // Import SweetAlert2
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashCan, faPen, faSquarePlus } from '@fortawesome/free-solid-svg-icons';  // Import Trash Can, Pen, and Plus Icons
+import { API_BUKET } from '../../utils/BaseUrl';
 
 const Dashboard = () => {
   // Retrieve the admin data safely from localStorage
@@ -34,7 +35,7 @@ const Dashboard = () => {
     const fetchBuketData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`http://localhost:9090/api/admin/buket/getAllByAdmin/${idAdmin}`);
+        const response = await axios.get(`${API_BUKET}/getAllByAdmin/${idAdmin}`);
         setBuketData(response.data || []);
         setLoading(false);
       } catch (err) {
@@ -63,7 +64,7 @@ const Dashboard = () => {
     // If user confirms, proceed with deletion
     if (result.isConfirmed) {
       try {
-        await axios.delete(`http://localhost:9090/api/admin/buket/delete/${id}`);
+        await axios.delete(`${API_BUKET}/delete/${id}`);
         setBuketData(buketData.filter((buket) => buket.id !== id)); // Remove deleted Buket from UI
         Swal.fire(
           'Terhapus!',

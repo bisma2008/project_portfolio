@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';  // Import SweetAlert2
 import { useNavigate } from 'react-router-dom';  // Import useNavigate
+import { API_BUKET } from '../../utils/BaseUrl';
 
 const AddBuketForm = ({ onAddBuket }) => {
   const [newBuket, setNewBuket] = useState({
@@ -40,7 +41,7 @@ const AddBuketForm = ({ onAddBuket }) => {
   
     try {
       const response = await axios.post(
-        `http://localhost:9090/api/admin/buket/tambah/${idAdmin}`,
+        `${API_BUKET}/tambah/${idAdmin}`,
         newBuket
       );
   

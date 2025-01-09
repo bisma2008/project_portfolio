@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';  // Import SweetAlert2
 import { useParams } from 'react-router-dom';  // Import useParams if using React Router
+import { API_BUKET } from '../../utils/BaseUrl';
 
 const EditBuketForm = () => {
   const [buketData, setBuketData] = useState({
@@ -33,7 +34,7 @@ const EditBuketForm = () => {
     }
 
     axios
-      .get(`http://localhost:9090/api/admin/buket/getById/${currentId}`)
+      .get(`${API_BUKET}/getById/${currentId}`)
       .then((response) => {
         if (response.status === 200 && response.data) {
           setBuketData(response.data);
@@ -66,7 +67,7 @@ const EditBuketForm = () => {
     e.preventDefault();
     try {
       const response = await axios.put(
-        `http://localhost:9090/api/admin/buket/editById/${buketData.id}`,
+        `${API_BUKET}/editById/${buketData.id}`,
         buketData,
         {
           params: {
