@@ -1,39 +1,28 @@
 import React, { useState } from "react";
 import axios from "axios";
-import Swal from "sweetalert2";  // Import SweetAlert
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUserTie } from "@fortawesome/free-solid-svg-icons"; // Import ikon
+import { faUserTie, faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons"; // Import eye icons
 
 const Register = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
 
-  const navigate = useNavigate(); // Initialize navigate
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Validasi form
-    if (!username || !password || !confirmPassword || !email) {
+    if (!username || !password || !email) {
       setError("Semua kolom harus diisi");
       Swal.fire({
         title: "Gagal!",
         text: "Semua kolom harus diisi",
-        icon: "error",
-        confirmButtonText: "OK",
-      });
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      setError("Password dan konfirmasi password tidak cocok");
-      Swal.fire({
-        title: "Gagal!",
-        text: "Password dan konfirmasi password tidak cocok",
         icon: "error",
         confirmButtonText: "OK",
       });
@@ -72,12 +61,11 @@ const Register = () => {
       // Reset form after successful registration
       setUsername("");
       setPassword("");
-      setConfirmPassword("");
       setEmail("");
       setError("");
 
       // Redirect to login page
-      navigate("/login"); // Navigate to login page after successful registration
+      navigate("/login");
     } catch (error) {
       setError("Terjadi kesalahan. Silakan coba lagi.");
       console.error("Error during registration:", error);
@@ -140,31 +128,23 @@ const Register = () => {
             />
           </div>
 
-          <div className="mb-4">
+          <div className="mb-4 relative">
             <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
               Password
             </label>
             <input
-              type="password"
+              type={showPassword ? "text" : "password"} // Toggle password visibility
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="mt-2 p-2 w-full border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
               placeholder="Masukkan password"
             />
-          </div>
-
-          <div className="mb-4">
-            <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-              Konfirmasi Password
-            </label>
-            <input
-              type="password"
-              id="confirmPassword"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              className="mt-2 p-2 w-full border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
-              placeholder="Konfirmasi password"
+            <FontAwesomeIcon
+              icon={showPassword ? faEyeSlash : faEye} // Toggle icon based on password visibility state
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-10 cursor-pointer text-gray-500 transition-transform transform hover:scale-110 duration-200 ease-in-out"
+              size="lg"
             />
           </div>
 

@@ -2,14 +2,15 @@ import React, { useState } from "react";
 import Swal from "sweetalert2";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUserTie } from '@fortawesome/free-solid-svg-icons';  // Import the user-tie icon
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUserTie, faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons"; // Import eye icons
 import { API_LOGIN } from "../../utils/BaseUrl";
 
 const Login = ({ setIsAuthenticated }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
 
   const navigate = useNavigate();
 
@@ -22,8 +23,7 @@ const Login = ({ setIsAuthenticated }) => {
     }
 
     try {
-      // Adjusted to match backend request structure
-      const response = await axios.post(`${API_LOGIN}/login`,  {
+      const response = await axios.post(`${API_LOGIN}/login`, {
         email,
         password,
       });
@@ -37,19 +37,14 @@ const Login = ({ setIsAuthenticated }) => {
         });
         setError("");
 
-        // Ambil token dan adminData dari respons
         const { token, adminData } = response.data;
 
         if (token && adminData?.id) {
-          // Simpan token dan adminData ke localStorage
           localStorage.setItem("authToken", token);
-          localStorage.setItem("adminData", JSON.stringify(adminData)); // Simpan adminData
-          localStorage.setItem("id", adminData.id); // Simpan ID admin secara langsung
+          localStorage.setItem("adminData", JSON.stringify(adminData));
+          localStorage.setItem("id", adminData.id);
           
-          // Set authentication state
           setIsAuthenticated(true);
-          
-          // Navigate ke dashboard
           navigate("/dashboard");
         }
       }
@@ -94,17 +89,23 @@ const Login = ({ setIsAuthenticated }) => {
             />
           </div>
 
-          <div className="mb-6">
+          <div className="mb-6 relative">
             <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
               Password
             </label>
             <input
-              type="password"
+              type={showPassword ? "text" : "password"} // Toggle password visibility
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="mt-2 p-2 w-full border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
               placeholder="Masukkan password"
+            />
+            <FontAwesomeIcon
+              icon={showPassword ? faEyeSlash : faEye} // Toggle icon based on password visibility state
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-10 cursor-pointer text-gray-500 transition-transform transform hover:scale-110 duration-200 ease-in-out"
+              size="lg"
             />
           </div>
 
