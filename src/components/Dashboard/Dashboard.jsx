@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import Swal from 'sweetalert2';  // Import SweetAlert2
+import Swal from 'sweetalert2';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrashCan, faPen, faSquarePlus } from '@fortawesome/free-solid-svg-icons';  // Import Trash Can, Pen, and Plus Icons
+import { faTrashCan, faPen, faSquarePlus } from '@fortawesome/free-solid-svg-icons';
 import { API_BUKET } from '../../utils/BaseUrl';
 
 const Dashboard = () => {
-  // Retrieve the admin data safely from localStorage
   const adminData = localStorage.getItem("adminData");
   let idAdmin = null;
 
@@ -24,7 +23,6 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch Buket data from the API
   useEffect(() => {
     if (!idAdmin) {
       setError("ID Admin tidak ditemukan. Silakan login kembali.");
@@ -47,9 +45,7 @@ const Dashboard = () => {
     fetchBuketData();
   }, [idAdmin]);
 
-  // Function to handle deleting a Buket with SweetAlert2 confirmation
   const deleteBuket = async (id) => {
-    // Show SweetAlert2 confirmation
     const result = await Swal.fire({
       title: 'Apakah Anda yakin?',
       text: "Data buket ini akan dihapus!",
@@ -61,28 +57,18 @@ const Dashboard = () => {
       cancelButtonText: 'Batal',
     });
 
-    // If user confirms, proceed with deletion
     if (result.isConfirmed) {
       try {
         await axios.delete(`${API_BUKET}/delete/${id}`);
-        setBuketData(buketData.filter((buket) => buket.id !== id)); // Remove deleted Buket from UI
-        Swal.fire(
-          'Terhapus!',
-          'Buket telah berhasil dihapus.',
-          'success'
-        );
+        setBuketData(buketData.filter((buket) => buket.id !== id));
+        Swal.fire('Terhapus!', 'Buket telah berhasil dihapus.', 'success');
       } catch (error) {
         console.error("Failed to delete Buket:", error);
-        Swal.fire(
-          'Gagal!',
-          'Terjadi kesalahan saat menghapus buket.',
-          'error'
-        );
+        Swal.fire('Gagal!', 'Terjadi kesalahan saat menghapus buket.', 'error');
       }
     }
   };
 
-  // Calculate total sales, bukets sold, and average rating
   const totalSales = buketData.reduce((total, buket) => total + (buket.sold * buket.hargaBuket || 0), 0);
   const totalBuketsSold = buketData.reduce((total, buket) => total + (buket.sold || 0), 0);
   const averageRating = (
@@ -99,7 +85,6 @@ const Dashboard = () => {
 
         {!loading && !error && (
           <>
-            {/* Card Summary */}
             <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 mb-12">
               <div className="bg-white dark:bg-gray-900 dark:text-white p-6 rounded-lg shadow-lg">
                 <h3 className="text-xl font-semibold text-center">Total Penjualan</h3>
@@ -117,21 +102,20 @@ const Dashboard = () => {
               </div>
             </div>
 
-            {/* Tombol Tambah Data */}
             <div className="flex justify-end mb-4">
               <Link to="/AddbuketForm">
                 <button className="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-400">
-                  <FontAwesomeIcon icon={faSquarePlus} className="mr-2" />
+                  <FontAwesomeIcon icon={faSquarePlus} className="mr-2" /> Tambah Buket
                 </button>
               </Link>
             </div>
 
-            {/* Daftar Buket */}
             <div className="bg-white dark:bg-gray-900 dark:text-white p-6 rounded-lg shadow-lg">
               <h3 className="text-2xl font-semibold text-center mb-6">Daftar Buket</h3>
               <table className="min-w-full table-auto">
                 <thead className="bg-primary text-white">
                   <tr>
+                    <th className="py-3 px-4 text-left">Foto</th>
                     <th className="py-3 px-4 text-left">Nama Buket</th>
                     <th className="py-3 px-4 text-left">Harga</th>
                     <th className="py-3 px-4 text-left">Aksi</th>
@@ -140,12 +124,23 @@ const Dashboard = () => {
                 <tbody>
                   {buketData.map((buket) => (
                     <tr key={buket.id} className="border-b">
+                      <td className="py-3 px-4">
+                        {buket.fotoUrl ? (
+                          <img
+                            src={buket.fotoUrl}
+                            alt={buket.namaBuket || "Buket"}
+                            className="w-16 h-16 object-cover rounded-md"
+                          />
+                        ) : (
+                          <span className="text-gray-500">Tidak ada foto</span>
+                        )}
+                      </td>
                       <td className="py-3 px-4">{buket.namaBuket || "N/A"}</td>
                       <td className="py-3 px-4">Rp {(buket.hargaBuket || 0).toLocaleString()}</td>
                       <td className="py-3 px-4">
                         <Link to={`/EditBuketForm/${buket.id}`}>
                           <button className="bg-blue-500 text-white py-1 px-4 rounded-md hover:bg-blue-400 focus:outline-none mr-2">
-                            <FontAwesomeIcon icon={faPen} className="mr-2" />
+                            <FontAwesomeIcon icon={faPen} className="mr-2" /> Edit
                           </button>
                         </Link>
                         <button

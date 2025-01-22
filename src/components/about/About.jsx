@@ -33,9 +33,7 @@ const About = () => {
               <h3 className="text-xl font-semibold mt-4 text-center">Buket Pernikahan</h3>
               <p className="text-lg font-bold text-primary text-center mt-3">Rp 250.000</p>
               <div className="flex justify-center mt-4">
-                <a href="/shop" className="inline-block primary-btn !px-6">
-                  Beli
-                </a>
+                
               </div>
             </div>
 
@@ -54,9 +52,7 @@ const About = () => {
               <h3 className="text-xl font-semibold mt-4 text-center">Buket Ulang Tahun</h3>
               <p className="text-lg font-bold text-primary text-center mt-3">Rp 150.000</p>
               <div className="flex justify-center mt-4">
-                <a href="/shop" className="inline-block primary-btn !px-6">
-                  Beli
-                </a>
+                
               </div>
             </div>
 
@@ -75,9 +71,7 @@ const About = () => {
               <h3 className="text-xl font-semibold mt-4 text-center">Buket Kasih Sayang</h3>
               <p className="text-lg font-bold text-primary text-center mt-3">Rp 180.000</p>
               <div className="flex justify-center mt-4">
-                <a href="/shop" className="inline-block primary-btn !px-6">
-                  Beli
-                </a>
+               
               </div>
             </div>
 
@@ -96,9 +90,7 @@ const About = () => {
               <h3 className="text-xl font-semibold mt-4 text-center">Buket Romantis</h3>
               <p className="text-lg font-bold text-primary text-center mt-3">Rp 220.000</p>
               <div className="flex justify-center mt-4">
-                <a href="/shop" className="inline-block primary-btn !px-6">
-                  Beli
-                </a>
+                
               </div>
             </div>
           </div>

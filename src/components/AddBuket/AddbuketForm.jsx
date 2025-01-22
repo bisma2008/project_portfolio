@@ -1,23 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import Swal from 'sweetalert2';  // Import SweetAlert2
-import { useNavigate } from 'react-router-dom';  // Import useNavigate
-import { API_BUKET } from '../../utils/BaseUrl';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
+import { API_BUKET } from "../../utils/BaseUrl";
 
-const AddBuketForm = ({ onAddBuket }) => {
-  const [newBuket, setNewBuket] = useState({
-    namaBuket: '',
-    hargaBuket: '',
-  });
-  const [idAdmin, setIdAdmin] = useState('');
-  const navigate = useNavigate();  // Initialize useNavigate
+const AddBuketForm = () => {
+  const [newBuket, setNewBuket] = useState({ namaBuket: "", hargaBuket: "" });
+  const [foto, setFoto] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [idAdmin, setIdAdmin] = useState("");
+  const navigate = useNavigate();
 
-  // Mengambil IdAdmin dari localStorage saat komponen pertama kali di-render
   useEffect(() => {
-    const adminData = localStorage.getItem('adminData');
+    const adminData = localStorage.getItem("adminData");
     if (adminData) {
       const parsedAdminData = JSON.parse(adminData);
-      setIdAdmin(parsedAdminData?.id || '');  // Menyimpan IdAdmin dari localStorage
+      setIdAdmin(parsedAdminData?.id || "");
     }
   }, []);
 
@@ -26,52 +24,59 @@ const AddBuketForm = ({ onAddBuket }) => {
     setNewBuket((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleFileChange = (e) => {
+    setFoto(e.target.files[0]);
+  };
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
   
-    // Validasi input sebelum submit
-    if (!newBuket.namaBuket || !newBuket.hargaBuket) {
+    if (!newBuket.namaBuket || !newBuket.hargaBuket || !foto) {
       Swal.fire({
-        icon: 'error',
-        title: 'Form tidak lengkap',
-        text: 'Pastikan semua field diisi.',
+        icon: "error",
+        title: "Form tidak lengkap",
+        text: "Harap lengkapi semua kolom dan unggah foto!",
       });
-      return;  // Tidak lanjutkan submit jika ada data kosong
+      return;
     }
   
+    setLoading(true);
+  
     try {
+      const formData = new FormData();
+      formData.append("buket", JSON.stringify(newBuket));
+      formData.append("file", foto);
+  
+      console.log("FormData yang dikirim:", {
+        buket: newBuket,
+        file: foto.name,
+      });
+  
       const response = await axios.post(
         `${API_BUKET}/tambah/${idAdmin}`,
-        newBuket
+        formData,
+        { headers: { "Content-Type": "multipart/form-data" } }
       );
   
-      // Call onAddBuket to update the parent component
-      if (onAddBuket) {
-        onAddBuket(response.data); // Make sure onAddBuket is a valid function
-      } else {
-        console.error("onAddBuket is not a function");
-      }
+      console.log("Response dari server:", response.data);
   
       Swal.fire({
-        icon: 'success',
-        title: 'Buket berhasil ditambahkan!',
-        text: 'Data buket baru telah ditambahkan.',
-      });
+        icon: "success",
+        title: "Berhasil!",
+        text: "Buket berhasil ditambahkan.",
+      }).then(() => navigate("/dashboard"));
   
-      // Navigate to dashboard after successful submission
-      navigate('/dashboard'); // Replace with the correct route to your dashboard
-  
-      setNewBuket({
-        namaBuket: '',
-        hargaBuket: '',
-      });
+      setNewBuket({ namaBuket: "", hargaBuket: "" });
+      setFoto(null);
     } catch (error) {
-      console.error('Error adding buket:', error);
+      console.error("Error dari server:", error);
       Swal.fire({
-        icon: 'error',
-        title: 'Gagal menambahkan buket',
-        text: 'Terjadi kesalahan saat menambahkan buket.',
+        icon: "error",
+        title: "Gagal Menambahkan Buket",
+        text: error.response?.data?.error || "Terjadi kesalahan.",
       });
+    } finally {
+      setLoading(false);
     }
   };
   
@@ -82,7 +87,6 @@ const AddBuketForm = ({ onAddBuket }) => {
         Tambah Buket Baru
       </h3>
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Input Nama Buket */}
         <div>
           <label
             htmlFor="namaBuket"
@@ -93,7 +97,7 @@ const AddBuketForm = ({ onAddBuket }) => {
           <input
             type="text"
             id="namaBuket"
-            name="namaBuket" 
+            name="namaBuket"
             value={newBuket.namaBuket}
             onChange={handleInputChange}
             placeholder="Masukkan nama buket"
@@ -101,7 +105,6 @@ const AddBuketForm = ({ onAddBuket }) => {
           />
         </div>
 
-        {/* Input Harga Buket */}
         <div>
           <label
             htmlFor="hargaBuket"
@@ -112,7 +115,7 @@ const AddBuketForm = ({ onAddBuket }) => {
           <input
             type="number"
             id="hargaBuket"
-            name="hargaBuket" 
+            name="hargaBuket"
             value={newBuket.hargaBuket}
             onChange={handleInputChange}
             placeholder="Masukkan harga buket"
@@ -120,13 +123,29 @@ const AddBuketForm = ({ onAddBuket }) => {
           />
         </div>
 
-        {/* Tombol Submit */}
+        <div>
+          <label
+            htmlFor="fotoBuket"
+            className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1"
+          >
+            Foto Buket
+          </label>
+          <input
+            type="file"
+            id="fotoBuket"
+            accept="image/*"
+            onChange={handleFileChange}
+            className="w-full p-3 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-500"
+          />
+        </div>
+
         <div className="flex justify-center">
           <button
             type="submit"
+            disabled={loading}
             className="bg-gray-700 dark:bg-gray-600 text-white py-2 px-6 rounded-md shadow hover:bg-gray-800 dark:hover:bg-gray-500 focus:ring-2 focus:ring-gray-500 transition duration-300"
           >
-            Tambah Buket
+            {loading ? "Loading..." : "Tambah Buket"}
           </button>
         </div>
       </form>
