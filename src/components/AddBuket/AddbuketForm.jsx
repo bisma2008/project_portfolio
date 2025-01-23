@@ -4,6 +4,32 @@ import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import { API_BUKET } from "../../utils/BaseUrl";
 
+const uploadImageToS3 = async (file) => {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  try {
+    const response = await axios.post(
+      "https://s3.lynk2.co/api/s3/test",
+      formData,
+      { headers: { "Content-Type": "multipart/form-data" } }
+    );
+
+    // Ambil URL file dari response.data.data.url_file
+    const fotoUrl = response.data?.data?.url_file;
+    if (fotoUrl) {
+      console.log("Respons S3:", response.data);
+      return fotoUrl;
+    } else {
+      console.error("Respons tidak valid:", response);
+      return null;
+    }
+  } catch (error) {
+    console.error("Upload ke S3 gagal:", error);
+    return null;
+  }
+};
+
 const AddBuketForm = () => {
   const [newBuket, setNewBuket] = useState({ namaBuket: "", hargaBuket: "" });
   const [foto, setFoto] = useState(null);
@@ -27,10 +53,10 @@ const AddBuketForm = () => {
   const handleFileChange = (e) => {
     setFoto(e.target.files[0]);
   };
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (!newBuket.namaBuket || !newBuket.hargaBuket || !foto) {
       Swal.fire({
         icon: "error",
@@ -39,33 +65,40 @@ const AddBuketForm = () => {
       });
       return;
     }
-  
+
     setLoading(true);
-  
+
     try {
-      const formData = new FormData();
-      formData.append("buket", JSON.stringify(newBuket));
-      formData.append("file", foto);
-  
-      console.log("FormData yang dikirim:", {
-        buket: newBuket,
-        file: foto.name,
-      });
-  
+      // Upload foto ke S3 dan dapatkan URL-nya
+      const fotoUrl = await uploadImageToS3(foto);
+      if (!fotoUrl) {
+        Swal.fire({
+          icon: "error",
+          title: "Upload Gagal",
+          text: "Tidak dapat mengunggah foto ke S3.",
+        });
+        setLoading(false);
+        return;
+      }
+
+      const buketWithFoto = { ...newBuket, fotoUrl };
+
+      console.log("Data yang dikirim ke backend:", buketWithFoto);
+
+      // Kirim data ke backend
       const response = await axios.post(
         `${API_BUKET}/tambah/${idAdmin}`,
-        formData,
-        { headers: { "Content-Type": "multipart/form-data" } }
+        buketWithFoto
       );
-  
-      console.log("Response dari server:", response.data);
-  
+
+      console.log("Respons dari server:", response.data);
+
       Swal.fire({
         icon: "success",
         title: "Berhasil!",
         text: "Buket berhasil ditambahkan.",
       }).then(() => navigate("/dashboard"));
-  
+
       setNewBuket({ namaBuket: "", hargaBuket: "" });
       setFoto(null);
     } catch (error) {
@@ -79,7 +112,6 @@ const AddBuketForm = () => {
       setLoading(false);
     }
   };
-  
 
   return (
     <div className="bg-white dark:bg-gray-800 dark:text-gray-200 p-8 rounded-lg shadow-md max-w-md mx-auto mt-12">
@@ -130,6 +162,13 @@ const AddBuketForm = () => {
           >
             Foto Buket
           </label>
+          {foto && (
+            <img
+              src={URL.createObjectURL(foto)}
+              alt="Preview"
+              className="w-32 h-32 object-cover rounded-md mb-2"
+            />
+          )}
           <input
             type="file"
             id="fotoBuket"

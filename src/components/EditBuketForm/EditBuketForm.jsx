@@ -11,52 +11,30 @@ const EditBuketForm = () => {
     hargaBuket: "",
     fotoUrl: "",
   });
-  const [idAdmin, setIdAdmin] = useState("");
   const [image, setImage] = useState(null);
-  const { id: routeId } = useParams();
-  const currentId = routeId;
+  const { id: currentId } = useParams();
+  const idAdmin = JSON.parse(localStorage.getItem("adminData"))?.id || "";
 
   useEffect(() => {
     if (!currentId) {
-      console.error("ID tidak tersedia");
-      Swal.fire({
-        title: "Gagal!",
-        text: "ID buket tidak ditemukan.",
-        icon: "error",
-        confirmButtonText: "OK",
-      });
+      Swal.fire("Gagal!", "ID buket tidak ditemukan.", "error");
       return;
     }
 
-    const adminData = localStorage.getItem("adminData");
-    if (adminData) {
-      const parsedAdminData = JSON.parse(adminData);
-      setIdAdmin(parsedAdminData?.id || "");
-    }
-
-    axios
-      .get(`${API_BUKET}/getById/${currentId}`)
-      .then((response) => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${API_BUKET}/getById/${currentId}`);
         if (response.status === 200 && response.data) {
           setBuketData(response.data);
         } else {
-          Swal.fire({
-            title: "Gagal!",
-            text: "Data buket tidak ditemukan.",
-            icon: "error",
-            confirmButtonText: "OK",
-          });
+          throw new Error("Data buket tidak ditemukan.");
         }
-      })
-      .catch((error) => {
-        console.error("Error fetching buket data:", error);
-        Swal.fire({
-          title: "Gagal!",
-          text: "Tidak dapat memuat data buket.",
-          icon: "error",
-          confirmButtonText: "OK",
-        });
-      });
+      } catch (error) {
+        Swal.fire("Gagal!", error.message, "error");
+      }
+    };
+
+    fetchData();
   }, [currentId]);
 
   const handleInputChange = (e) => {
@@ -69,47 +47,36 @@ const EditBuketForm = () => {
     if (file && (file.type === "image/jpeg" || file.type === "image/png")) {
       setImage(file);
     } else {
-      Swal.fire({
-        title: "Gagal!",
-        text: "Hanya file JPG atau PNG yang diperbolehkan.",
-        icon: "error",
-        confirmButtonText: "OK",
-      });
+      Swal.fire(
+        "Gagal!",
+        "Hanya file JPG atau PNG yang diperbolehkan.",
+        "error"
+      );
       setImage(null);
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const formData = new FormData();
-    formData.append("buket", JSON.stringify(buketData));
-    if (image) {
-      formData.append("file", image);
+    if (!buketData.namaBuket || !buketData.hargaBuket) {
+      Swal.fire("Gagal!", "Nama dan harga buket wajib diisi.", "error");
+      return;
     }
 
+    const formData = new FormData();
+    formData.append("buketDTO", JSON.stringify(buketData));
+    if (image) formData.append("file", image);
+
     try {
-      const response = await axios.put(
-        `http://localhost:9090/api/admin/buket/editById/${buketData.id}?idAdmin=${idAdmin}`,
-        formData,
-        {
-          headers: {
-            // Do not set Content-Type, let FormData handle it
-          },
-        }
+      await axios.put(
+        `${API_BUKET}/editById/${currentId}?idAdmin=${idAdmin}`,
+        formData
       );
-      Swal.fire({
-        title: "Berhasil!",
-        text: "Buket berhasil diperbarui.",
-        icon: "success",
-        confirmButtonText: "OK",
-      });
+      Swal.fire("Berhasil!", "Buket berhasil diperbarui.", "success");
     } catch (error) {
-      Swal.fire({
-        title: "Gagal!",
-        text: error.response?.data?.message || "Gagal memperbarui buket.",
-        icon: "error",
-        confirmButtonText: "OK",
-      });
+      const message =
+        error.response?.data?.message || "Gagal memperbarui buket.";
+      Swal.fire("Gagal!", message, "error");
     }
   };
 
